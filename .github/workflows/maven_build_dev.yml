@@ -5,9 +5,9 @@ name: Build dev branches with maven
 
 on:
   push:
-    branches: [ '*-dev' ]
+    branches: [ v0.1-dev ]
   pull_request:
-    branches: [ '*-dev' ]
+    branches: [ v0.1-dev ]
 
 jobs:
   build:
