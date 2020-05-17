@@ -9,5 +9,8 @@
         <module name="MinecraftFleaMarket" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="MinecraftFleaMarket" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
