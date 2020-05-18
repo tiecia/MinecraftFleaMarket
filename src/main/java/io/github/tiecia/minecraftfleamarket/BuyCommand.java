@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
+
 /*
     Usage:
         /buy list
@@ -19,26 +21,29 @@ import org.bukkit.entity.Player;
 public class BuyCommand implements CommandExecutor {
 
     //Used to access the items in the market
-    private MinecraftFleaMarket market;
+    private final MarketManager market;
 
-    public BuyCommand(MinecraftFleaMarket market){
+    public BuyCommand(MarketManager market) {
         assert market != null;
         this.market = market;
     }
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(commandSender instanceof Player){
+        if(commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            if(strings.length > 0){
-                if(strings[0].equals("list")){
-                    if(strings.length < 1 && strings[1] != null){
+            if (strings.length > 0) {
+                if (strings[0].equals("list")) {
+                    if (strings.length < 1 && strings[1] != null) {
                         //List all available items of that type
                         player.sendMessage(MinecraftFleaMarket.chatTag + "List Items of" + strings[1]);
                     }
 
+                    sendMessage(player, "All Items for Sale:");
                     //List all available items
-                    player.sendMessage(MinecraftFleaMarket.chatTag + "List Items");
+                    for (Offer offer : market.offers()) {
+                        sendMessage(player, "\t" + offer.print());
+                    }
                 } else {
                     //Attempt to parse a market ID
                     try {

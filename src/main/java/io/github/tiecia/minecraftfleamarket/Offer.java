@@ -5,19 +5,28 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * The Offer Object keeps track of player offers on the flea market.
- * */
+ */
 public class Offer {
     //Item Stacks
     //Unit Price
     //Player who put offer up.
-    private Player merchant;
-    private int unitPrice;
-    ItemStack item;
+    private final Player merchant;
+    private final int unitPrice;
+    private int id;
+    private final ItemStack item;
 
     public Offer(Player inputMerchant, int inputUnitPrice, ItemStack inputItem) {
         this.merchant = inputMerchant;
         this.unitPrice = inputUnitPrice;
         this.item = inputItem;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getItemAmount() {
@@ -34,5 +43,9 @@ public class Offer {
 
     public Player getMerchant() {
         return merchant;
+    }
+
+    public String print() {
+        return "ID: " + id + " Unit Price: " + unitPrice + " Amount: " + item.getAmount() + " Seller: " + merchant.getDisplayName();
     }
 }
