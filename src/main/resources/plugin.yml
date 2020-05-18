@@ -1,3 +1,7 @@
 name: MinecraftFleaMarket
 version: 0.1.0
 main: io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket
+commands:
+  buy:
+    description: Use this to buy stuff
+    usage: /buy
