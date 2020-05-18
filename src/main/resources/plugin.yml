@@ -5,3 +5,6 @@ commands:
   buy:
     description: Use this to buy stuff
     usage: /buy
+  sell:
+    description: Use this to sell stuff
+    usage: /sell <amount> <price>
