@@ -9,7 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.*;
+import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendFailureMessage;
+import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendSuccessMessage;
 
 /*
     Usage:
@@ -56,26 +57,31 @@ public class SellCommand implements CommandExecutor {
                     ItemStack holdingStack = playerInventory.getItemInMainHand();
                     Material itemType = holdingStack.getType();
 
+                    if (holdingStack.getAmount() < 1) {
+                        sendFailureMessage(player, "Please hold the item you want to sell");
+                        return true;
+                    } else if (quantityOfItems(playerInventory, itemType) < amount) {
+                        sendFailureMessage(player, "Not enough items in inventory");
+                        return true;
+                    } else if (amount < 1) {
+                        sendFailureMessage(player, "Quantity to low");
+                        return true;
+                    } else if (price < 1) {
+                        sendFailureMessage(player, "Price to low");
+                        return true;
+                    }
+
                     //Collect items from inventory
                     ItemStack itemsToSell = fillStackFromInventory(new ItemStack(itemType, 0), playerInventory, amount);
 
 
-                    if (itemsToSell.getAmount() < 1) { //Check to make sure items were found.
-                        sendFailureMessage(player, "Item's cannot be found in inventory");
-                        return true;
-                    }
-
                     if (!market.sell(player, itemsToSell, price)) { //Check to make sure items were put to market
-                        sendFailureMessage(player, "Unable put items to market");
+                        sendFailureMessage(player, "Unable to put items to market");
                         return true;
                     }
 
+                    sendSuccessMessage(player, itemsToSell.getAmount() + " items put to market");
 
-                    if (itemsToSell.getAmount() < amount) { //Check to make sure all requested items were put to market
-                        sendWarningMessage(player, "Only " + itemsToSell.getAmount() + " items were put to market " + "because not enough items were found in your inventory.");
-                    } else { //Successfully put to market
-                        sendSuccessMessage(player, itemsToSell.getAmount() + " items were successfully put to market.");
-                    }
 
                 } catch (NumberFormatException e) {
                     //Invalid command parameters, return usage.
@@ -92,8 +98,19 @@ public class SellCommand implements CommandExecutor {
         return true;
     }
 
+    private int quantityOfItems(PlayerInventory playerInventory, Material material) {
+        int quantity = 0;
+        for (int i = 0; i < playerInventory.getSize(); i++) {
+            ItemStack currentSlot = playerInventory.getItem(i);
+            if (currentSlot != null && currentSlot.getType().equals(material)) {
+                quantity += currentSlot.getAmount();
+            }
+        }
+        return quantity;
+    }
+
     /**
-     * Fills the given stack with "ammount" items where the item is the item in the main hand of the {@link PlayerInventory}
+     * Fills the given stack with "amount" items where the item is the item in the main hand of the {@link PlayerInventory}
      *
      * @param stackToSell     the ItemStack to fill with items.
      * @param playerInventory the inventory to search.

@@ -87,6 +87,10 @@ public class MarketManager {
         return null;
     }
 
+    public Map<UUID, Integer> getBank() {
+        return this.bank;
+    }
+
     /**
      * Helper method to make the offer ID when a new offer is created. We need to change this to me more user friendly.
      *
