@@ -24,8 +24,13 @@ public class MarketList implements CommandExecutor {
             if (strings.length > 0) {
                 strings[0] = strings[0].toLowerCase();
                 for (Offer offer : market.offers()) {
-                    if (strings[0].equals(offer.getItem().getItemMeta().getLocalizedName())) {
-                        sendMessage(player, "\t" + offer.print());
+                    sendMessage(player, "\t" + offer.getItem().getType().toString());
+                    sendMessage(player, "\t" + strings[0]);
+                    if (strings[0].equals(offer.getItem().getType().toString().toLowerCase())) {
+                        if(!offer.getMerchant().equals(player))
+                            sendMessage(player, "\t" + offer.print());
+                        else
+                            sendMessage(player, "\t" + offer.print() + "(Self)");
                     }
                 }
             } else {
