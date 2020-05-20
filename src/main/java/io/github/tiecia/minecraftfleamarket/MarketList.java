@@ -10,6 +10,7 @@ import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessa
 
 public class MarketList implements CommandExecutor {
 
+    //market that the marketlist will check
     private final MarketManager market;
 
     public MarketList(MarketManager market) {
@@ -17,28 +18,45 @@ public class MarketList implements CommandExecutor {
         this.market = market;
     }
 
+
+
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
             if (strings.length > 0) {
-                strings[0] = strings[0].toLowerCase();
+                String searchType = ""; //searchType is called such because it will be used to search the market
+                for(int i = 0;i < strings.length;i++) { //Item types are formatted in uppercase with upperscores
+                    if(i != 0)                          //This loop formats the player input thusly
+                    searchType += "_";
+                    searchType += strings[i];
+                }
+                searchType = searchType.toLowerCase();
+                boolean searchSuccess = false;
                 for (Offer offer : market.offers()) {
-                    sendMessage(player, "\t" + offer.getItem().getType().toString());
-                    sendMessage(player, "\t" + strings[0]);
-                    if (strings[0].equals(offer.getItem().getType().toString().toLowerCase())) {
+                 //   sendMessage(player, "\t" + offer.getItem().getType().toString());
+                 //   sendMessage(player, "\t" + searchType);
+                    if (searchType.equals(offer.getItem().getType().toString().toLowerCase())) {
+                        searchSuccess = true;
                         if(!offer.getMerchant().equals(player))
                             sendMessage(player, "\t" + offer.print());
                         else
-                            sendMessage(player, "\t" + offer.print() + "(Self)");
+                            sendMessage(player, "\t" + offer.print() + "(Self)"); //Useful for not buying your own items
                     }
                 }
+                if(searchSuccess = false) {
+                    sendMessage(player, "\t No items found for" + searchType);
+                }
             } else {
+                //No arguments
+                sendMessage(player, "\t not enough arguments");
                 return false;
             }
             return true;
         }
         else {
+            //Server cannot search the marketlist
+            Bukkit.getLogger().info("Server cannot see marketlist");
         return false; }
     }
 }
