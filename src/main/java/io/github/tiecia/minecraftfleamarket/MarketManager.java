@@ -84,7 +84,15 @@ public class MarketManager {
      * @// TODO: 5/18/2020  Make a searching algorithm
      */
     public PriorityQueue<Offer> offers(Material material) {
-        return null;
+        PriorityQueue<Offer> returnQueue = new PriorityQueue<Offer>();
+        if(!market.isEmpty()) {
+            for(Offer offer : this.offers()) {
+                if(material.equals(offer.getItem().getType())) {
+                    returnQueue.add(offer);
+                }
+            }
+        }
+        return returnQueue;
     }
 
     /**

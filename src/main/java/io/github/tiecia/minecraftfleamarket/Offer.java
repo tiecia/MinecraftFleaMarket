@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * The Offer Object keeps track of player offers on the flea market.
  */
-public class Offer {
+public class Offer implements Comparable<Offer> {
     //Item Stacks
     //Unit Price
     //Player who put offer up.
@@ -47,5 +47,14 @@ public class Offer {
 
     public String print() {
         return "ID: " + id + " Unit Price: " + unitPrice + " Amount: " + item.getAmount() + " Seller: " + merchant.getDisplayName();
+    }
+    //compareTo for offer objects compares the price values
+    public int compareTo(Offer o) {
+        if (o != null) {
+            int compareInt = Integer.compare(this.unitPrice, o.getUnitPrice());
+            return compareInt;
+        }
+        else
+            return -1;
     }
 }
