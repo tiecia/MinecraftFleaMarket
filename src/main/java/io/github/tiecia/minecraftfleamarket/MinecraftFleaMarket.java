@@ -69,6 +69,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
         //Register commands
         this.getCommand("buy").setExecutor(new BuyCommand(marketManager));
         this.getCommand("sell").setExecutor(new SellCommand(marketManager));
+        this.getCommand("marketlist").setExecutor(new MarketList(marketManager));
 
         getLogger().info("Plugin Successfully Enabled");
     }

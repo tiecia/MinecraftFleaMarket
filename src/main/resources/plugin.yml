@@ -8,3 +8,6 @@ commands:
   sell:
     description: Use this to sell stuff
     usage: /sell <amount> <price>
+  marketlist:
+    description: Use this to get the market list
+    usage: /marketlist <item name>
