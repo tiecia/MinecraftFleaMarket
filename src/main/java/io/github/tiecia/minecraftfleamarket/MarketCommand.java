@@ -8,12 +8,12 @@ import org.bukkit.entity.Player;
 
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
 
-public class MarketList implements CommandExecutor {
+public class MarketCommand implements CommandExecutor {
 
     //market that the marketlist will check
     private final MarketManager market;
 
-    public MarketList(MarketManager market) {
+    public MarketCommand(MarketManager market) {
         assert market != null;
         this.market = market;
     }
@@ -49,8 +49,15 @@ public class MarketList implements CommandExecutor {
                 }
             } else {
                 //No arguments
-                sendMessage(player, "\t not enough arguments");
-                return false;
+                for(Offer offer: market.offers()) {
+                    String itemType = "";
+                    itemType = offer.getItem().getType().toString().replaceAll("_", " ");
+                    if(!offer.getMerchant().equals(player))
+                        sendMessage(player, "\t" + offer.print() + itemType);
+                    else
+                        sendMessage(player, "\t" + offer.print() + itemType + "(Self)"); //Useful for not buying your own items
+                }
+                return true;
             }
             return true;
         }
