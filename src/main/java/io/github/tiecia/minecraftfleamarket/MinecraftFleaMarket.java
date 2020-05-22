@@ -60,6 +60,15 @@ public class MinecraftFleaMarket extends JavaPlugin {
     }
 
     /**
+     * Logs a message to the server console at an "info" level.
+     *
+     * @param message the string to be logged.
+     */
+    public static void log(String message) {
+        Bukkit.getLogger().info("[FleaMarket]" + message);
+    }
+
+    /**
      * Called when Spigot enables this plugin.
      */
     @Override
@@ -71,6 +80,8 @@ public class MinecraftFleaMarket extends JavaPlugin {
         this.getCommand("sell").setExecutor(new SellCommand(marketManager));
         this.getCommand("marketlist").setExecutor(new MarketCommand(marketManager));
 
+        registerEvents();
+
         getLogger().info("Plugin Successfully Enabled");
     }
 
@@ -80,7 +91,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
      */
     private void registerEvents() {
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvents(new JoinEvent(), this);
+        pm.registerEvents(new InitializePlayerEvent(this.marketManager), this);
     }
 
     /**
