@@ -8,12 +8,12 @@ import org.bukkit.entity.Player;
 
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
 
-public class MarketList implements CommandExecutor {
+public class MarketCommand implements CommandExecutor {
 
     //market that the marketlist will check
     private final MarketManager market;
 
-    public MarketList(MarketManager market) {
+    public MarketCommand(MarketManager market) {
         assert market != null;
         this.market = market;
     }
