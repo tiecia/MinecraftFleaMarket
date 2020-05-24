@@ -7,13 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
+import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendSuccessMessage;
 
 /*
     Usage:
-        /buy list
-            Lists all available purchases
-        /buy list <item>
-            Lists all available purchases of that item
         /buy <quantity> <market ID>
             Buy quantity of market ID
  */
@@ -32,33 +29,24 @@ public class BuyCommand implements CommandExecutor {
         if(commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            if (strings.length > 0) {
-                if (strings[0].equals("list")) {
-                    if (strings.length < 1 && strings[1] != null) {
-                        //List all available items of that type
-                        player.sendMessage(MinecraftFleaMarket.chatTag + "List Items of" + strings[1]);
-                    }
-
-                    sendMessage(player, "All Items for Sale:");
-                    //List all available items
-                    for (Offer offer : market.offers()) {
-                        sendMessage(player, "\t" + offer.print());
-                    }
-                } else {
-                    //Attempt to parse a market ID
-                    try {
-                        int quantity = Integer.parseInt(strings[0]);
-                        int marketID = Integer.parseInt(strings[1]);
-                        player.sendMessage(MinecraftFleaMarket.chatTag + "Successfully Bought" + quantity + "of" + marketID);
-                    } catch (NumberFormatException e) {
-                        //Invalid ID Number, respond with correct usage
-                        return false;
-                    }
-                }
-            } else {
-                //No parameters, respond with correct usage
+            if(strings.length != 2) {
                 return false;
+            } else {
+                //Attempt to parse a market ID
+                try {
+                    int quantity = Integer.parseInt(strings[0]);
+                    int marketID = Integer.parseInt(strings[1]);
+                    Offer offerToBuy = market.getOffer(marketID);
+                    if(market.buy(player, marketID, quantity)){
+                        sendSuccessMessage(player, "Successfully Bought " + quantity + " " + offerToBuy.getItem().getItemMeta().getDisplayName());
+                    }
+                } catch (NumberFormatException e) {
+                    //Invalid parameters, respond with correct usage
+                    return false;
+                }
             }
+
+
 
         } else {
             Bukkit.getLogger().info("Server cannot buy");

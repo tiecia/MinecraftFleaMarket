@@ -65,7 +65,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * @param message the string to be logged.
      */
     public static void log(String message) {
-        Bukkit.getLogger().info("[FleaMarket]" + message);
+        Bukkit.getLogger().info("[MinecraftFleaMarket] " + message);
     }
 
     /**

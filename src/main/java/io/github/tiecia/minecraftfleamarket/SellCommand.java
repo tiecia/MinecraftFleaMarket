@@ -9,8 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendFailureMessage;
-import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendSuccessMessage;
+import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.*;
 
 /*
     Usage:
@@ -58,15 +57,19 @@ public class SellCommand implements CommandExecutor {
                     Material itemType = holdingStack.getType();
 
                     if (holdingStack.getAmount() < 1) {
+                        //Not holding an item
                         sendFailureMessage(player, "Please hold the item you want to sell");
                         return true;
                     } else if (quantityOfItems(playerInventory, itemType) < amount) {
+                        //Player is asking to sell more than they have
                         sendFailureMessage(player, "Not enough items in inventory");
                         return true;
                     } else if (amount < 1) {
+                        //Quantity parameter is too small
                         sendFailureMessage(player, "Quantity to low");
                         return true;
                     } else if (price < 1) {
+                        //Price parameter is too small
                         sendFailureMessage(player, "Price to low");
                         return true;
                     }
@@ -74,8 +77,8 @@ public class SellCommand implements CommandExecutor {
                     //Collect items from inventory
                     ItemStack itemsToSell = fillStackFromInventory(new ItemStack(itemType, 0), playerInventory, amount);
 
-
-                    if (!market.sell(player, itemsToSell, price)) { //Check to make sure items were put to market
+                    //Check to make sure items were put to market
+                    if (!market.sell(player, itemsToSell, price)) {
                         sendFailureMessage(player, "Unable to put items to market");
                         return true;
                     }
