@@ -242,8 +242,24 @@ public class MarketManager {
      * @// TODO: 5/18/2020   Make more user friendly
      */
     private int makeID(Offer offer) {
-        int id = offer.hashCode();
+        PriorityQueue<Integer> idList = new PriorityQueue<Integer>();
+        for(int listing : market.keySet()) {
+            idList.add(listing);
+        }
+        int id = lowestFind(idList);
         offer.setId(id);
         return id;
+    }
+    private int lowestFind(PriorityQueue<Integer> idListing){
+        int current = 1;
+        for(Integer id : idListing){
+            if(current == id){
+                current++;
+            }
+            else{
+                return current;
+            }
+        }
+        return current++;
     }
 }
