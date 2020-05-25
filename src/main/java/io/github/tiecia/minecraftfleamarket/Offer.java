@@ -1,5 +1,6 @@
 package io.github.tiecia.minecraftfleamarket;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,12 +34,31 @@ public class Offer implements Comparable<Offer> {
         return this.item.getAmount();
     }
 
+    /**
+     *
+     * @param amount the amount of items to buy from this offer. Amount must be not be more than the value of getItemAmount()
+     */
+    public ItemStack buy(int amount){
+        assert amount <= getItemAmount();
+        ItemStack stack = new ItemStack(this.item.getType(), 0);
+        stack.setItemMeta(item.getItemMeta());
+        while(stack.getAmount() < amount){ //Put 'amount' items in the new stack from the offer stack.
+            item.setAmount(item.getAmount()-1);
+            stack.setAmount(stack.getAmount()+1);
+        }
+        return stack;
+    }
+
     public int getUnitPrice() {
         return unitPrice;
     }
 
     public ItemStack getItem() {
         return item;
+    }
+
+    public Material getType(){
+        return item.getType();
     }
 
     public Player getMerchant() {
