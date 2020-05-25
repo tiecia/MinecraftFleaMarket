@@ -75,11 +75,15 @@ public class SellCommand implements CommandExecutor {
                     }
 
                     //Collect items from inventory
-                    ItemStack itemsToSell = fillStackFromInventory(new ItemStack(itemType, 0), playerInventory, amount);
+                    ItemStack newOfferItems = new ItemStack(itemType, 0);
+                    newOfferItems.setItemMeta(holdingStack.getItemMeta());
+                    ItemStack itemsToSell = fillStackFromInventory(newOfferItems, playerInventory, amount);
 
-                    //Check to make sure items were put to market
                     if (!market.sell(player, itemsToSell, price)) {
+                        //Check to make sure items were put to market. In theory should never fail.
                         sendFailureMessage(player, "Unable to put items to market");
+                        //If sell fails give player items back
+                        market.addToInventory(player, itemsToSell);
                         return true;
                     }
 
@@ -101,6 +105,13 @@ public class SellCommand implements CommandExecutor {
         return true;
     }
 
+    /**
+     * Finds the total number of items in a players inventory.
+     *
+     * @param playerInventory The inventory to search
+     * @param material The material to search for
+     * @return The number of items with the corresponding {@link Material} in the player's inventory.
+     */
     private int quantityOfItems(PlayerInventory playerInventory, Material material) {
         int quantity = 0;
         for (int i = 0; i < playerInventory.getSize(); i++) {
@@ -123,10 +134,20 @@ public class SellCommand implements CommandExecutor {
     private ItemStack fillStackFromInventory(ItemStack stackToSell, PlayerInventory playerInventory, int amount) {
         for (int i = 0; i < playerInventory.getSize(); i++) {
             ItemStack itemInSlot = playerInventory.getItem(i);
-            if (itemInSlot != null && itemInSlot.getType().equals(stackToSell.getType())) {
+            if(itemInSlot != null){
+                log("Slot " + i + " Meta Equal: " + itemInSlot.getItemMeta().equals(stackToSell.getItemMeta()));
+                log("Slot " + i + " Type Equal: " + itemInSlot.getType().equals(stackToSell.getType()));
+            }
+            //Note: the not in the last 2 parts of this if statement make no sense. I want the statement to be true if the two equal.
+            //But for some reason that statement produces false if they are equal and true if they are different so the not has to be there
+            //to fix this. The compareTo method in ItemMeta and ItemStack might be backwards.
+            log("Is Correct Item: " + (itemInSlot != null && itemInSlot.getType().equals(stackToSell.getType()) && !itemInSlot.getItemMeta().equals(stackToSell.getItemMeta())));
+            if (itemInSlot != null && itemInSlot.getType().equals(stackToSell.getType()) && itemInSlot.getItemMeta().equals(stackToSell.getItemMeta())) {
+                log("Adding: " + (stackToSell.getAmount() < amount && itemInSlot.getAmount() > 0));
                 while (stackToSell.getAmount() < amount && itemInSlot.getAmount() > 0) {
                     itemInSlot.setAmount(itemInSlot.getAmount() - 1);
                     stackToSell.setAmount(stackToSell.getAmount() + 1);
+                    log("+1 Stack To Sell");
                 }
             }
         }

@@ -142,13 +142,14 @@ public class MarketManager {
      *               Bad things can happen if you try to add more items then there is room for.
      * @param items the items to give
      */
-    private void addToInventory(Player player, ItemStack items){
+    public void addToInventory(Player player, ItemStack items){
         PlayerInventory inventory = player.getInventory();
         int stackSize = items.getType().getMaxStackSize();
         for (int i = 0; i < inventory.getSize() && items.getAmount() > 0; i++) {
             ItemStack currentSlot = inventory.getItem(i);
             if(currentSlot == null){
                 currentSlot =  new ItemStack(items.getType(), 0);
+                currentSlot.setItemMeta(items.getItemMeta());
             }
             if(currentSlot.getType().equals(items.getType())){
                 while(currentSlot.getAmount() < stackSize && items.getAmount() != 0){
@@ -170,7 +171,8 @@ public class MarketManager {
     public boolean sell(Player player, ItemStack items, int price) {
         Offer newOffer = new Offer(player, price, items);
         int id = makeID(newOffer);
-        if (market.keySet().contains(id)) { //If new offer will override an old one. In theory should never happen.
+        if (market.keySet().contains(id)) {
+            //Check to make sure new offer does not override an old offer. In theory should never happen.
             return false;
         }
         market.put(id, newOffer);

@@ -41,6 +41,7 @@ public class Offer implements Comparable<Offer> {
     public ItemStack buy(int amount){
         assert amount <= getItemAmount();
         ItemStack stack = new ItemStack(this.item.getType(), 0);
+        stack.setItemMeta(item.getItemMeta());
         while(stack.getAmount() < amount){ //Put 'amount' items in the new stack from the offer stack.
             item.setAmount(item.getAmount()-1);
             stack.setAmount(stack.getAmount()+1);
