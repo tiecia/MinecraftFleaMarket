@@ -43,14 +43,9 @@ public class MarketManager {
         market = new HashMap<Integer, Offer>();
     }
 
-    /**
-     * Opens a market from a save file.
-     *
-     * @param saveFile the file that contains a valid MarketManager object.
-     * @// TODO: 5/18/2020 Implement save and restore
-     */
-    public MarketManager(File saveFile) {
-
+    public MarketManager(Map<UUID, Integer> inputBank, Map<Integer, Offer> inputMarket) {
+        this.bank = inputBank;
+        this.market = inputMarket;
     }
 
     /**
@@ -93,7 +88,7 @@ public class MarketManager {
         }
 
         //Give seller money
-        UUID seller = offerToBuy.getMerchant().getUniqueId();
+        UUID seller = offerToBuy.getMerchant();
         bank.put(seller, bank.get(seller) + totalCost);
 
         //Give to player
@@ -169,7 +164,7 @@ public class MarketManager {
      * @return true if successfully put the {@link ItemStack} to market; false if unsuccessful. Failure means an {@link Offer} linked to an existing market ID tried to be overridden.
      */
     public boolean sell(Player player, ItemStack items, int price) {
-        Offer newOffer = new Offer(player, price, items);
+        Offer newOffer = new Offer(player.getUniqueId(), price, items);
         int id = makeID(newOffer);
         if (market.keySet().contains(id)) {
             //Check to make sure new offer does not override an old offer. In theory should never happen.
@@ -232,6 +227,10 @@ public class MarketManager {
      */
     public Map<UUID, Integer> getBank() {
         return this.bank;
+    }
+
+    public Map<Integer, Offer> getMarket() {
+        return this.market;
     }
 
     /**

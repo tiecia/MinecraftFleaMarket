@@ -2,9 +2,18 @@ package io.github.tiecia.minecraftfleamarket;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class MinecraftFleaMarket extends JavaPlugin {
 
@@ -69,12 +78,153 @@ public class MinecraftFleaMarket extends JavaPlugin {
     }
 
     /**
+     * Saves the market to the plugin files.
+     *
+     * Bank is saved in the format: "[PLAYER] [CURRENCY AMOUNT]"
+     *
+     * Market is saved in the format "[MARKET ID] [MERCHANT PLAYER] [UNIT PRICE] [ITEM]"
+     *
+     */
+    public void save() {
+        try {
+            Map<UUID, Integer> bank = this.marketManager.getBank();
+            Map<Integer, Offer> market = this.marketManager.getMarket();
+
+            File saveBank = new File("plugins/MinecraftFleaMarket/bankSave.txt");
+            File saveMarket = new File("plugins/MinecraftFleaMarket/marketSave.txt");
+
+            PrintStream bankStream = new PrintStream(saveBank);
+            for (UUID playerID : bank.keySet()) {
+                bankStream.println(playerID.toString() + " " + bank.get(playerID));
+            }
+            bankStream.close();
+
+            PrintStream marketStream = new PrintStream(saveMarket);
+            Offer current;
+            for (Integer offerID : market.keySet()) {
+                current = market.get(offerID);
+                marketStream.println(offerID + " " + current.getMerchant() + " " + current.getUnitPrice() + "\n" + itemStackToString(current.getItem()) + "[!]");
+            }
+            marketStream.close();
+
+        } catch (Exception e) {
+            getLogger().info("Failed in saving.");
+        }
+    }
+
+    /**
+     * Loads a saved MarketManager.
+     */
+    public void load() {
+        Map<UUID, Integer> loadedBank = new HashMap<UUID, Integer>();
+        Map<Integer, Offer> loadedMarket = new HashMap<Integer, Offer>();
+
+        try {
+            Scanner scanBank = new Scanner(new File("plugins/MinecraftFleaMarket/bankSave.txt"));
+            while (scanBank.hasNextLine()) {
+                Scanner parseLine = new Scanner(scanBank.nextLine());
+                String uuid = parseLine.next();
+                UUID inputUUID = UUID.fromString(uuid);
+                int balance = parseLine.nextInt();
+                loadedBank.put(inputUUID, balance);
+                parseLine.close();
+            }
+            scanBank.close();
+            getLogger().info("bank loaded");
+        } catch (Exception e) {
+
+        }
+
+        try {
+            Scanner scanMarket = new Scanner(new File("plugins/MinecraftFleaMarket/marketSave.txt"));
+            while (scanMarket.hasNextLine()) {
+                Scanner scanLine = new Scanner(scanMarket.nextLine());
+                int offerID = Integer.parseInt(scanLine.next());
+                UUID playerUUID = UUID.fromString(scanLine.next());
+                int unitPrice = Integer.parseInt(scanLine.next());
+                scanLine.close();
+
+                String itemStack = scanMarket.nextLine();
+                String input = scanMarket.nextLine();
+                while(!input.equals("[!]")) {
+                    itemStack = itemStack + "\n" + input;
+                    input = scanMarket.nextLine();
+                }
+
+                ItemStack trueItemStack = stringToItemStack(itemStack);
+                Offer inputOffer = new Offer(playerUUID, unitPrice, trueItemStack);
+                /*getLogger().info("raw uuid: " + playerUUID);
+                getLogger().info("playerUUID: " + Bukkit.getPlayer(playerUUID));
+                getLogger().info("OfflinePlayerUUID " + Bukkit.getOfflinePlayer(playerUUID).getPlayer());
+                getLogger().info("unitPrice: " + unitPrice);
+                getLogger().info("trueItemStack: " + trueItemStack.toString());
+                getLogger().info(inputOffer.print()); */
+                loadedMarket.put(offerID, inputOffer);
+            }
+
+            scanMarket.close();
+            getLogger().info("market Loaded");
+
+            this.marketManager = new MarketManager(loadedBank, loadedMarket);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Method heavily based on Hellgast23's solution for getting an ItemStack to String. From: https://www.spigotmc.org/threads/serializing-itemstack-to-string.80233/?__cf_chl_jschl_tk__=936b757011f08dd92347f848029cc26a01264780-1590526252-0-AZGgc91rW5BpfVUuFppoJ-wxhB-Zl2w1pmTfdC4CKYJnlfcY_c3XRvWLA5VPvUpJ9HQCU96PL5A0z6_NKplKzimtgnT5wgLZZwKv07I878NQ3ADtFRJEAv2EzJFmI4PxqcRt6KJC4iKaaEJPdAiuDvJFGg9nhB2iyAc0XygneYXx5T4Ee6f9u7w8UC1W8-pRTUnmwmQFsuNlwkqM3bSXfzCt5ZQg-O1vDsETnrMDe3r79g63HKOf0JsrbKx6vt_ddQ3g0K1jQO-SzXvrdecPJCqm1eJFMLqm0sIfF0mdLAoz3npv13u2v6yTbs0nn2cx-mieaRdoGGMAiFFhiEOY1Eg
+     * Converts an ItemStack to a YamlConfig String with all associated data.
+     * @param item
+     * @return A String representation of the ItemStack.
+     */
+    public String itemStackToString(ItemStack item) {
+        YamlConfiguration currentItem = new YamlConfiguration();
+        currentItem.set("item", item);
+        return currentItem.saveToString();
+    }
+
+    /**
+     * Decode method for the above ItemStack to String conversion. Again heavily based on the same solution as above.
+     * @param inputString - The String to be converted to an ItemStack
+     * @return the saved ItemStack
+     */
+    public ItemStack stringToItemStack(String inputString) {
+        YamlConfiguration currentItem = new YamlConfiguration();
+            try {
+                currentItem.loadFromString(inputString);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                return null;
+            }
+        return currentItem.getItemStack("item", null);
+    }
+
+    /**
      * Called when Spigot enables this plugin.
      */
     @Override
     public void onEnable() {
-        //Will load from file later. Probably an XML file.
-        this.marketManager = new MarketManager();
+        //Creates Plugin file if not already there. This is where settings and the market will be saved.
+        File directory = new File("plugins/MinecraftFleaMarket");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
+        //Will load previously saved marketmanager.
+        final File marketSave = new File("plugins/MinecraftFleaMarket/marketSave.txt");
+        if ((marketSave.exists())) {
+            try {
+                load();
+                getLogger().info("Succeeded in loading.");
+            } catch (Exception e) {
+                getLogger().info("Failed in loading.");
+                e.printStackTrace();
+            }
+        } else {
+            //Creates fresh marketManager for the first time
+            this.marketManager = new MarketManager();
+        }
         //Register commands
         this.getCommand("buy").setExecutor(new BuyCommand(marketManager));
         this.getCommand("sell").setExecutor(new SellCommand(marketManager));
@@ -99,6 +249,8 @@ public class MinecraftFleaMarket extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        getLogger().info("Plugin Successfully Enabled");
+        save();
+        getLogger().info("Plugin Successfully Disabled");
     }
 }
+

@@ -1,8 +1,11 @@
 package io.github.tiecia.minecraftfleamarket;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 /**
  * The Offer Object keeps track of player offers on the flea market.
@@ -11,15 +14,17 @@ public class Offer implements Comparable<Offer> {
     //Item Stacks
     //Unit Price
     //Player who put offer up.
-    private final Player merchant;
+    private final UUID merchant;
     private final int unitPrice;
+    private String merchantName;
     private int id;
     private final ItemStack item;
 
-    public Offer(Player inputMerchant, int inputUnitPrice, ItemStack inputItem) {
+    public Offer(UUID inputMerchant, int inputUnitPrice, ItemStack inputItem) {
         this.merchant = inputMerchant;
         this.unitPrice = inputUnitPrice;
         this.item = inputItem;
+        this.merchantName = Bukkit.getOfflinePlayer(inputMerchant).getName();
     }
 
     public int getId() {
@@ -61,12 +66,12 @@ public class Offer implements Comparable<Offer> {
         return item.getType();
     }
 
-    public Player getMerchant() {
+    public UUID getMerchant() {
         return merchant;
     }
 
     public String print() {
-        return "ID: " + id + " Unit Price: " + unitPrice + " Amount: " + item.getAmount() + " Seller: " + merchant.getDisplayName();
+        return "ID: " + id + " Unit Price: " + unitPrice + " Amount: " + item.getAmount() + " Seller: " + this.merchantName;
     }
     //compareTo for offer objects compares the price values
     public int compareTo(Offer o) {
