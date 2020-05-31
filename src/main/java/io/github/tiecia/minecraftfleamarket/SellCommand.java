@@ -1,6 +1,5 @@
 package io.github.tiecia.minecraftfleamarket;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -92,7 +91,6 @@ public class SellCommand implements CommandExecutor {
 
                 } catch (NumberFormatException e) {
                     //Invalid command parameters, return usage.
-                    Bukkit.getLogger().info("Invalid Parameters");
                     return false;
                 }
             } else {
@@ -100,7 +98,7 @@ public class SellCommand implements CommandExecutor {
                 return false;
             }
         } else {
-            Bukkit.getLogger().info("Server cannot sell");
+            log("Server cannot sell");
         }
         return true;
     }
@@ -134,20 +132,13 @@ public class SellCommand implements CommandExecutor {
     private ItemStack fillStackFromInventory(ItemStack stackToSell, PlayerInventory playerInventory, int amount) {
         for (int i = 0; i < playerInventory.getSize(); i++) {
             ItemStack itemInSlot = playerInventory.getItem(i);
-            if(itemInSlot != null){
-                log("Slot " + i + " Meta Equal: " + itemInSlot.getItemMeta().equals(stackToSell.getItemMeta()));
-                log("Slot " + i + " Type Equal: " + itemInSlot.getType().equals(stackToSell.getType()));
-            }
-            //Note: the not in the last 2 parts of this if statement make no sense. I want the statement to be true if the two equal.
-            //But for some reason that statement produces false if they are equal and true if they are different so the not has to be there
-            //to fix this. The compareTo method in ItemMeta and ItemStack might be backwards.
-            log("Is Correct Item: " + (itemInSlot != null && itemInSlot.getType().equals(stackToSell.getType()) && !itemInSlot.getItemMeta().equals(stackToSell.getItemMeta())));
+            /* Note: the not in the last 2 parts of this if statement make no sense. I want the statement to be true if the two equal.
+            But for some reason that statement produces false if they are equal and true if they are different so the not has to be there
+            to fix this. The compareTo method in ItemMeta and ItemStack might be backwards. */
             if (itemInSlot != null && itemInSlot.getType().equals(stackToSell.getType()) && itemInSlot.getItemMeta().equals(stackToSell.getItemMeta())) {
-                log("Adding: " + (stackToSell.getAmount() < amount && itemInSlot.getAmount() > 0));
                 while (stackToSell.getAmount() < amount && itemInSlot.getAmount() > 0) {
                     itemInSlot.setAmount(itemInSlot.getAmount() - 1);
                     stackToSell.setAmount(stackToSell.getAmount() + 1);
-                    log("+1 Stack To Sell");
                 }
             }
         }
