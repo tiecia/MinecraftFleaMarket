@@ -2,29 +2,26 @@ package io.github.tiecia.minecraftfleamarket;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.io.File;
 import java.util.*;
 
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.log;
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendFailureMessage;
-import static org.bukkit.Bukkit.getLogger;
 
 public class MarketManager {
 
     /**
      * A map that stores all player's bank balance. Player's are distinguished by their UUID which is unique to all players.
      */
-    private Map<UUID, Integer> bank;
+    private final Map<UUID, Integer> bank;
 
     /**
      * A map that stores all current offers on the market and relates them to their market ID.
      */
-    private Map<Integer, Offer> market;
+    private final Map<Integer, Offer> market;
 
     private final int startAmount = 2000;
 
@@ -36,13 +33,19 @@ public class MarketManager {
         bank = new HashMap<UUID, Integer>();
 
         //Add all players currently online to the bank
-        for(Player p : Bukkit.getOnlinePlayers()){
+        for (Player p : Bukkit.getOnlinePlayers()) {
             bank.put(p.getUniqueId(), startAmount);
         }
 
         market = new HashMap<Integer, Offer>();
     }
 
+    /**
+     * Creates a market manager with the given
+     *
+     * @param inputBank
+     * @param inputMarket
+     */
     public MarketManager(Map<UUID, Integer> inputBank, Map<Integer, Offer> inputMarket) {
         this.bank = inputBank;
         this.market = inputMarket;
@@ -67,9 +70,13 @@ public class MarketManager {
             //Check to make sure offer exists
             sendFailureMessage(player, "Offer not found");
             return false;
-        } else if(offerToBuy.getItemAmount() < quantity) {
+        } else if (offerToBuy.getItemAmount() < quantity) {
             //Make sure quantity user inputted in not too big.
             sendFailureMessage(player, "Not enough items in offer");
+            return false;
+        } else if (player.getUniqueId().equals(offerToBuy.getMerchant())) { //Comment statement for self testing
+            //Make sure user cannot buy from him/herself.
+            sendFailureMessage(player, "Cannot buy from yourself");
             return false;
         }
 
@@ -98,6 +105,7 @@ public class MarketManager {
             //Remove offer from market if empty
             market.remove(marketID);
         }
+
         return true;
     }
 
@@ -182,7 +190,7 @@ public class MarketManager {
     public void registerNewPlayer(Player player){
 
         bank.put(player.getUniqueId(), startAmount);
-        log(" " + player.getDisplayName() + " was added to the system");
+        log(player.getDisplayName() + " was added to the system");
     }
 
     /**
@@ -229,6 +237,9 @@ public class MarketManager {
         return this.bank;
     }
 
+    /**
+     * @return the map that stores all offer data in this manager
+     */
     public Map<Integer, Offer> getMarket() {
         return this.market;
     }
@@ -249,6 +260,8 @@ public class MarketManager {
         offer.setId(id);
         return id;
     }
+
+
     private int lowestFind(PriorityQueue<Integer> idListing){
         int current = 1;
         for(Integer id : idListing){

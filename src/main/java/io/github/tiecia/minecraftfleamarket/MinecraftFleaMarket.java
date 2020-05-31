@@ -153,17 +153,12 @@ public class MinecraftFleaMarket extends JavaPlugin {
 
                 ItemStack trueItemStack = stringToItemStack(itemStack);
                 Offer inputOffer = new Offer(playerUUID, unitPrice, trueItemStack);
-                /*getLogger().info("raw uuid: " + playerUUID);
-                getLogger().info("playerUUID: " + Bukkit.getPlayer(playerUUID));
-                getLogger().info("OfflinePlayerUUID " + Bukkit.getOfflinePlayer(playerUUID).getPlayer());
-                getLogger().info("unitPrice: " + unitPrice);
-                getLogger().info("trueItemStack: " + trueItemStack.toString());
-                getLogger().info(inputOffer.print()); */
+                inputOffer.setId(offerID);
                 loadedMarket.put(offerID, inputOffer);
             }
 
             scanMarket.close();
-            getLogger().info("market Loaded");
+            log("Market Successfully Loaded");
 
             this.marketManager = new MarketManager(loadedBank, loadedMarket);
         } catch (Exception e) {
@@ -211,20 +206,20 @@ public class MinecraftFleaMarket extends JavaPlugin {
             directory.mkdir();
         }
 
-        //Will load previously saved marketmanager.
+        //Will load previously saved MarketManager.
         final File marketSave = new File("plugins/MinecraftFleaMarket/marketSave.txt");
         if ((marketSave.exists())) {
             try {
                 load();
-                getLogger().info("Succeeded in loading.");
             } catch (Exception e) {
-                getLogger().info("Failed in loading.");
+                log("Failed To Load Market");
                 e.printStackTrace();
             }
         } else {
             //Creates fresh marketManager for the first time
             this.marketManager = new MarketManager();
         }
+
         //Register commands
         this.getCommand("buy").setExecutor(new BuyCommand(marketManager));
         this.getCommand("sell").setExecutor(new SellCommand(marketManager));
