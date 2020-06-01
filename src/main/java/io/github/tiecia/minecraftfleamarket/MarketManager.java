@@ -2,10 +2,14 @@ package io.github.tiecia.minecraftfleamarket;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.*;
 
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.log;
@@ -25,6 +29,10 @@ public class MarketManager {
 
     private final int startAmount = 2000;
 
+    private String bankPath;
+
+    private String marketPath;
+
     /**
      * Creates a fresh new market.
      */
@@ -38,17 +46,124 @@ public class MarketManager {
         }
 
         market = new HashMap<Integer, Offer>();
+
+        this.bankPath = "plugins/MinecraftFleaMarket/bankSave.txt";
+        this.marketPath = "plugins/MinecraftFleaMarket/marketSave.txt";
     }
 
     /**
-     * Creates a market manager with the given
+     * Loads the marketManager from the specified filePath
      *
-     * @param inputBank
-     * @param inputMarket
+     * @param bankPath the path to the saved bank
+     * @param marketPath the path to the saved market
      */
-    public MarketManager(Map<UUID, Integer> inputBank, Map<Integer, Offer> inputMarket) {
-        this.bank = inputBank;
-        this.market = inputMarket;
+    public MarketManager(String bankPath, String marketPath) {
+        this.bankPath = bankPath;
+        this.marketPath = marketPath;
+        Map<UUID, Integer> loadedBank = new HashMap<UUID, Integer>();
+        Map<Integer, Offer> loadedMarket = new HashMap<Integer, Offer>();
+
+        try {
+            Scanner scanBank = new Scanner(new File(bankPath));
+            while (scanBank.hasNextLine()) {
+                Scanner parseLine = new Scanner(scanBank.nextLine());
+                String uuid = parseLine.next();
+                UUID inputUUID = UUID.fromString(uuid);
+                int balance = parseLine.nextInt();
+                loadedBank.put(inputUUID, balance);
+                parseLine.close();
+            }
+            scanBank.close();
+        } catch (Exception e) {
+
+        }
+
+        try {
+            Scanner scanMarket = new Scanner(new File(marketPath));
+            while (scanMarket.hasNextLine()) {
+                Scanner scanLine = new Scanner(scanMarket.nextLine());
+                int offerID = Integer.parseInt(scanLine.next());
+                UUID playerUUID = UUID.fromString(scanLine.next());
+                int unitPrice = Integer.parseInt(scanLine.next());
+                scanLine.close();
+
+                String itemStack = scanMarket.nextLine();
+                String input = scanMarket.nextLine();
+                while(!input.equals("[!]")) {
+                    itemStack = itemStack + "\n" + input;
+                    input = scanMarket.nextLine();
+                }
+
+                ItemStack trueItemStack = stringToItemStack(itemStack);
+                Offer inputOffer = new Offer(playerUUID, unitPrice, trueItemStack);
+                inputOffer.setId(offerID);
+                loadedMarket.put(offerID, inputOffer);
+            }
+
+            scanMarket.close();
+            log("Market Successfully Loaded");
+
+
+        } catch (FileNotFoundException e) {
+            log("Saved files cannot be found!");
+        }
+        this.bank = loadedBank;
+        this.market = loadedMarket;
+    }
+
+    /**
+     * Saves the marketManager to a file designated in the config file.
+     */
+    public void save() {
+        try {
+            File saveBank = new File(this.bankPath);
+            File saveMarket = new File(this.marketPath);
+
+            PrintStream bankStream = new PrintStream(saveBank);
+            for (UUID playerID : bank.keySet()) {
+                bankStream.println(playerID.toString() + " " + bank.get(playerID));
+            }
+            bankStream.close();
+
+            PrintStream marketStream = new PrintStream(saveMarket);
+            Offer current;
+            for (Integer offerID : market.keySet()) {
+                current = market.get(offerID);
+                marketStream.println(offerID + " " + current.getMerchant() + " " + current.getUnitPrice() + "\n" + itemStackToString(current.getItem()) + "[!]");
+            }
+            marketStream.close();
+            log("Saving successful");
+        } catch (Exception e) {
+            log("Saving failed!");
+        }
+    }
+
+    /**
+     * Method heavily based on Hellgast23's solution for getting an ItemStack to String. From: https://www.spigotmc.org/threads/serializing-itemstack-to-string.80233/?__cf_chl_jschl_tk__=936b757011f08dd92347f848029cc26a01264780-1590526252-0-AZGgc91rW5BpfVUuFppoJ-wxhB-Zl2w1pmTfdC4CKYJnlfcY_c3XRvWLA5VPvUpJ9HQCU96PL5A0z6_NKplKzimtgnT5wgLZZwKv07I878NQ3ADtFRJEAv2EzJFmI4PxqcRt6KJC4iKaaEJPdAiuDvJFGg9nhB2iyAc0XygneYXx5T4Ee6f9u7w8UC1W8-pRTUnmwmQFsuNlwkqM3bSXfzCt5ZQg-O1vDsETnrMDe3r79g63HKOf0JsrbKx6vt_ddQ3g0K1jQO-SzXvrdecPJCqm1eJFMLqm0sIfF0mdLAoz3npv13u2v6yTbs0nn2cx-mieaRdoGGMAiFFhiEOY1Eg
+     * Converts an ItemStack to a YamlConfig String with all associated data.
+     * @param item
+     * @return A String representation of the ItemStack.
+     */
+    private String itemStackToString(ItemStack item) {
+        YamlConfiguration currentItem = new YamlConfiguration();
+        currentItem.set("item", item);
+        return currentItem.saveToString();
+    }
+
+    /**
+     * Decode method for the above ItemStack to String conversion. Again heavily based on the same solution as above.
+     * @param inputString - The String to be converted to an ItemStack
+     * @return the saved ItemStack
+     */
+    private ItemStack stringToItemStack(String inputString) {
+        YamlConfiguration currentItem = new YamlConfiguration();
+        try {
+            currentItem.loadFromString(inputString);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+        return currentItem.getItemStack("item", null);
     }
 
     /**
@@ -75,7 +190,7 @@ public class MarketManager {
             sendFailureMessage(player, "Not enough items in offer");
             return false;
         } else if (player.getUniqueId().equals(offerToBuy.getMerchant())) { //Comment statement for self testing
-            //Make sure user cannot buy from him/herself.
+           //Make sure user cannot buy from him/herself.
             sendFailureMessage(player, "Cannot buy from yourself");
             return false;
         }
@@ -106,6 +221,7 @@ public class MarketManager {
             market.remove(marketID);
         }
 
+        this.save();
         return true;
     }
 
@@ -179,6 +295,7 @@ public class MarketManager {
             return false;
         }
         market.put(id, newOffer);
+        this.save();
         return true;
     }
 
