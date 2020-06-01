@@ -78,27 +78,6 @@ public class MinecraftFleaMarket extends JavaPlugin {
     }
 
     /**
-     * Saves the market to the plugin files.
-     *
-     * Bank is saved in the format: "[PLAYER] [CURRENCY AMOUNT]"
-     *
-     * Market is saved in the format "[MARKET ID] [MERCHANT PLAYER] [UNIT PRICE] [ITEM]"
-     *
-     */
-    public void save() {
-        this.marketManager.save();
-    }
-
-    /**
-     * Loads a saved MarketManager.
-     */
-    public void load() {
-        this.marketManager = new MarketManager("plugins/MinecraftFleaMarket/bankSave.txt", "plugins/MinecraftFleaMarket/marketSave.txt");
-    }
-
-
-
-    /**
      * Called when Spigot enables this plugin.
      */
     @Override
@@ -113,7 +92,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
         final File marketSave = new File("plugins/MinecraftFleaMarket/marketSave.txt");
         if ((marketSave.exists())) {
             try {
-                load();
+                this.marketManager = new MarketManager("plugins/MinecraftFleaMarket/bankSave.txt", "plugins/MinecraftFleaMarket/marketSave.txt");
             } catch (Exception e) {
                 log("Failed To Load Market");
                 e.printStackTrace();
@@ -147,7 +126,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        save();
+        this.marketManager.save();
         getLogger().info("Plugin Successfully Disabled");
     }
 }
