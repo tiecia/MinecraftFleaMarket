@@ -34,8 +34,13 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * @param player  Player to send message to
      * @param message The message to send.
      */
-    public static void sendMessage(Player player, String message) {
-        player.sendMessage(chatTag + message);
+    public static void sendMessage(Player player, String message, Boolean tag) {
+        if(tag) {
+            player.sendMessage(chatTag + message);
+        }
+        else{
+            player.sendMessage(message);
+        }
     }
 
     /**
@@ -45,7 +50,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * @param message The message to send.
      */
     public static void sendSuccessMessage(Player player, String message) {
-        sendMessage(player, ChatColor.GREEN + message);
+        sendMessage(player, ChatColor.GREEN + message,true);
     }
 
     /**
@@ -55,7 +60,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * @param message The message to send.
      */
     public static void sendWarningMessage(Player player, String message) {
-        sendMessage(player, ChatColor.YELLOW + message);
+        sendMessage(player, ChatColor.YELLOW + message,true);
     }
 
     /**
@@ -65,7 +70,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * @param message The message to send.
      */
     public static void sendFailureMessage(Player player, String message) {
-        sendMessage(player, ChatColor.RED + message);
+        sendMessage(player, ChatColor.RED + message,true);
     }
 
     /**
@@ -105,7 +110,7 @@ public class MinecraftFleaMarket extends JavaPlugin {
         //Register commands
         this.getCommand("buy").setExecutor(new BuyCommand(marketManager));
         this.getCommand("sell").setExecutor(new SellCommand(marketManager));
-        this.getCommand("marketlist").setExecutor(new MarketCommand(marketManager));
+        this.getCommand("market").setExecutor(new MarketCommand(marketManager));
 
         registerEvents();
 
