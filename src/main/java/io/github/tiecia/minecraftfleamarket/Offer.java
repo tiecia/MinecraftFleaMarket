@@ -1,6 +1,7 @@
 package io.github.tiecia.minecraftfleamarket;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,7 @@ public class Offer implements Comparable<Offer> {
     }
 
     public String print() {
-        return "ID: " + id + " Unit Price: " + unitPrice + " Amount: " + item.getAmount() + " Seller: " + this.merchantName;
+        return ChatColor.BLACK + "["+ ChatColor.LIGHT_PURPLE + id + ChatColor.BLACK + "]: " + ChatColor.AQUA + this.merchantName + ChatColor.GRAY + " is selling " + ChatColor.YELLOW + item.getAmount() + ChatColor.RED + " "+ item.getType().name().toLowerCase().replace("_"," ") + ChatColor.GRAY + " for $" + ChatColor.DARK_GREEN + unitPrice + ChatColor.GRAY + " each";
     }
     //compareTo for offer objects compares the price values
     public int compareTo(Offer o) {
