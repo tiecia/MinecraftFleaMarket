@@ -171,19 +171,22 @@ public class MarketManager {
      *
      * Before a buy can happen the offer must exist, the offer must have all the items requested, 
      * the buyer must have enough money, the buyer must have enough room in their inventory for the items. If any of these
-     * conditions are not met the buy does not occur and this method returns false.
+     * conditions are not met the buy operation does not occur and this method returns false.
      *
      * @param player   player who is buying
      * @param marketID market item the player wants to buy
-     * @param quantity The number of items to buy. Must be greater than 0
+     * @param quantity The number of items to buy.
      * @return true if buy operation successful; false if buy operation failed.
      */
     public boolean buy(Player player, int marketID, int quantity){
-        assert quantity > 0;
         Offer offerToBuy = market.get(marketID);
         if(offerToBuy == null){
             //Check to make sure offer exists
             sendFailureMessage(player, "Offer not found");
+            return false;
+        } else if(quantity <= 0) {
+            //Ensures the quantity is greater than 0
+            sendFailureMessage(player, "Invalid Quantity");
             return false;
         } else if (offerToBuy.getItemAmount() < quantity) {
             //Make sure quantity user inputted in not too big.

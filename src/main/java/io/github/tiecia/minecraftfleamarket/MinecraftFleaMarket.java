@@ -32,13 +32,13 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * Sends a general grey message to the player.
      *
      * @param player  Player to send message to
-     * @param message The message to send.
+     * @param message The message to send
+     * @param tag When true the plugin tag, "[FleaMarket]" is appended to the beginning of the message.
      */
     public static void sendMessage(Player player, String message, Boolean tag) {
         if(tag) {
             player.sendMessage(chatTag + message);
-        }
-        else{
+        } else {
             player.sendMessage(message);
         }
     }
