@@ -10,7 +10,7 @@ fi
 cd /minecraft/plugins
 
 echo "Checking for BileTools2..."
-if [ -e /minecraft/plugins/BileTools-2.jar ]
+if [ -e /minecraft/plugins/BileTools-*.jar ]
 then
     echo "BileTools2 found! Skipping download."
 else
@@ -19,15 +19,13 @@ else
 fi
 
 echo "Checking for PlugManX..."
-if [ -e /minecraft/plugins/PlugManX-2.3.0.jar ]
+if [ -e /minecraft/plugins/PlugManX-*.jar ]
 then
     echo "PlugManX found! Skipping download."
 else
     echo "PlugManX not found. Downloading now..."
     wget https://github.com/tiecia/PlugManX-releases/releases/download/v2.3.0/PlugManX-2.3.0.jar
 fi
-
 echo "Development plugins installed!"
-
 echo "Initializing server...this will take a while."
 /my_init

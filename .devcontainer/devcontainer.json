@@ -3,22 +3,13 @@
 {
 	"name": "MinecraftFleaMarket_devcontainer",
 	"dockerFile": "Dockerfile",
-	"forwardPorts": [25565, 9001],
-	"postStartCommand": "/init_environment.sh"
-
-	// Use this environment variable if you need to bind mount your local source code into a new container.
-	//"remoteEnv": {
-	//	"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
-	//},
-
-	// Configure tool-specific properties.
-	//"customizations": {
-	//	// Configure properties specific to VS Code.
-	//	"vscode": {		
-	//		// Add the IDs of extensions you want installed when the container is created.
-	//		"extensions": [
-	//			"ms-azuretools.vscode-docker"
-	//		]
-	//	}
-	//},
+	"forwardPorts": [
+		25565,
+		9001
+	],
+	"postStartCommand": "sh /workspaces/MinecraftFleaMarket/scripts/init_environment.sh",
+	"extensions": [
+		"vscjava.vscode-java-pack",
+		"redhat.vscode-xml"
+	]
 }

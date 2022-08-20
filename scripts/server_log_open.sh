@@ -1,0 +1,1 @@
+code /minecraft/logs/latest.log
