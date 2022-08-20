@@ -23,6 +23,9 @@ public class MarketCommand implements CommandExecutor {
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
+            if(strings.length == 0)
+                return false;
+                
             Player player = (Player) commandSender;
             if(strings[0].toLowerCase().equals("list")) {
                 if (strings.length > 1) {
@@ -46,7 +49,7 @@ public class MarketCommand implements CommandExecutor {
                                 sendMessage(player, offer.print() + "(Self)", false); //Useful for not buying your own items
                         }
                     }
-                    if (searchSuccess = false) {
+                    if (searchSuccess == false) {
                         sendMessage(player, "No items found for" + searchType,true);
                     }
                 } else{
