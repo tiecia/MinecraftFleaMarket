@@ -4,7 +4,7 @@ This is a Spigot plugin that provides a basic peer-to-peer store system for mine
 <br/><br/>
 Tested Minecraft Versions: 1.15.2
 
-Note: This plugin will probably work with most Spigot server versions. If it works on a version not listed above please make a pull request adding the version to the list.
+Note: This plugin will probably work with most Spigot server versions. If it works on a version not listed above please make a pull request adding the version to this list.
 <br/><br/>
 
 # Usage
@@ -47,13 +47,13 @@ Sell 40 of the item in my hand for $1.
 ```
 /market list
 ```
-![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/containerize/images/list.png?raw=true)
+![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/master-release/images/list.png?raw=true)
 <br/><br/>
 
 ```
 /market list log
 ```
-![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/containerize/images/search.png?raw=true)
+![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/master-release/images/search.png?raw=true)
 <br/><br/>
 
 ```
@@ -65,4 +65,12 @@ Buy 20 of item 4.
 ```
 /market balance
 ```
-![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/containerize/images/balance.png?raw=true)
+![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/master-release/images/balance.png?raw=true)
+<br/><br/>
+# Contributing
+Contributions to this project are welcome! If you would like to contribute: 
+ 1. Fork this repo
+ 1. Make your changes
+ 1. Create a pull request with your changes
+
+If you find an bug, issue, or have a question, please create an issue detailing your experience/question.
