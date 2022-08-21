@@ -171,27 +171,26 @@ public class MarketManager {
      *
      * Before a buy can happen the offer must exist, the offer must have all the items requested, 
      * the buyer must have enough money, the buyer must have enough room in their inventory for the items. If any of these
-     * conditions are not met the buy does not occur and this method returns false.
+     * conditions are not met the buy operation does not occur and this method returns false.
      *
      * @param player   player who is buying
      * @param marketID market item the player wants to buy
-     * @param quantity The number of items to buy. Must be greater than 0
+     * @param quantity The number of items to buy.
      * @return true if buy operation successful; false if buy operation failed.
      */
     public boolean buy(Player player, int marketID, int quantity){
-        assert quantity > 0;
         Offer offerToBuy = market.get(marketID);
         if(offerToBuy == null){
             //Check to make sure offer exists
             sendFailureMessage(player, "Offer not found");
             return false;
+        } else if(quantity <= 0) {
+            //Ensures the quantity is greater than 0
+            sendFailureMessage(player, "Invalid Quantity");
+            return false;
         } else if (offerToBuy.getItemAmount() < quantity) {
             //Make sure quantity user inputted in not too big.
             sendFailureMessage(player, "Not enough items in offer");
-            return false;
-        } else if (player.getUniqueId().equals(offerToBuy.getMerchant())) { //Comment statement for self testing
-           //Make sure user cannot buy from him/herself.
-            sendFailureMessage(player, "Cannot buy from yourself");
             return false;
         }
 
@@ -327,6 +326,22 @@ public class MarketManager {
      */
     public Offer getOffer(int id){
         return market.get(id);
+    }
+
+    /**
+     * Gets all offers with the given search term in it's display name.
+     *
+     * @param searchTerm the string segment to search for.
+     * @return a min queue where the offer with the lowest unit price is the head.
+     */
+    public PriorityQueue<Offer> offers(String searchTerm) {
+        PriorityQueue<Offer> returnQueue = new PriorityQueue<Offer>();
+        for (Offer offer : offers()) {
+            if(offer.getDisplayName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                returnQueue.add(offer);
+            }
+        }
+        return returnQueue;
     }
 
     /**

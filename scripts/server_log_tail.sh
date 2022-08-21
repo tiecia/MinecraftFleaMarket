@@ -1,0 +1,1 @@
+tail -f "${SPIGOT_HOME}/logs/latest.log"

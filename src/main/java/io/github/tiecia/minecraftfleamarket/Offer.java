@@ -1,9 +1,9 @@
 package io.github.tiecia.minecraftfleamarket;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -20,11 +20,14 @@ public class Offer implements Comparable<Offer> {
     private String merchantName;
     private int id;
     private final ItemStack item;
+    private String displayName;
 
     public Offer(UUID inputMerchant, int inputUnitPrice, ItemStack inputItem) {
         this.merchant = inputMerchant;
         this.unitPrice = inputUnitPrice;
         this.item = inputItem;
+        this.displayName = item.getType().name().toLowerCase().replace("_"," ");
+        displayName = WordUtils.capitalizeFully(displayName);
         this.merchantName = Bukkit.getOfflinePlayer(inputMerchant).getName();
     }
 
@@ -63,17 +66,27 @@ public class Offer implements Comparable<Offer> {
         return item;
     }
 
+    @Override
+    public String toString() {
+        return displayName;
+    }
+
     public Material getType(){
         return item.getType();
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public UUID getMerchant() {
         return merchant;
     }
 
-    public String print() {
-        return ChatColor.BLACK + "["+ ChatColor.LIGHT_PURPLE + id + ChatColor.BLACK + "]: " + ChatColor.AQUA + this.merchantName + ChatColor.GRAY + " is selling " + ChatColor.YELLOW + item.getAmount() + ChatColor.RED + " "+ item.getType().name().toLowerCase().replace("_"," ") + ChatColor.GRAY + " for $" + ChatColor.DARK_GREEN + unitPrice + ChatColor.GRAY + " each";
+    public String format() {
+        return ChatColor.GRAY + "["+ ChatColor.WHITE + id + ChatColor.GRAY + "]: " + ChatColor.AQUA + this.merchantName + ChatColor.GRAY + " is selling " + ChatColor.YELLOW + item.getAmount() + ChatColor.GREEN + " "+ displayName + ChatColor.GRAY + " for $" + ChatColor.DARK_GREEN + unitPrice + ChatColor.GRAY + " each";
     }
+
     //compareTo for offer objects compares the price values
     public int compareTo(Offer o) {
         if (o != null) {

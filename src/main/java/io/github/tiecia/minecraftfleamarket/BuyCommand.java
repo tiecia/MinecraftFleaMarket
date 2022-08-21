@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendSuccessMessage;
 
 /*
@@ -56,7 +55,7 @@ public class BuyCommand implements CommandExecutor {
                     int marketID = Integer.parseInt(strings[1]);
                     Offer offerToBuy = market.getOffer(marketID);
                     if(market.buy(player, marketID, quantity)){
-                        sendSuccessMessage(player, "Successfully bought " + quantity + " "  + ChatColor.GRAY + offerToBuy.getItem().getType().name());
+                        sendSuccessMessage(player, ChatColor.GRAY + "Successfully bought " + ChatColor.YELLOW + quantity + " "  + ChatColor.GREEN + offerToBuy.getDisplayName());
                     }
                 } catch (NumberFormatException e) {
                     //Invalid parameters, respond with correct usage

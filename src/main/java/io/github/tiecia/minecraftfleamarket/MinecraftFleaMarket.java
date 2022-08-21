@@ -2,18 +2,13 @@ package io.github.tiecia.minecraftfleamarket;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.md_5.bungee.api.chat.TextComponent;
+
 import java.io.File;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.UUID;
 
 public class MinecraftFleaMarket extends JavaPlugin {
 
@@ -32,17 +27,30 @@ public class MinecraftFleaMarket extends JavaPlugin {
      * Sends a general grey message to the player.
      *
      * @param player  Player to send message to
-     * @param message The message to send.
+     * @param message The message to send
+     * @param tag When true the plugin tag, "[FleaMarket]" is appended to the beginning of the message.
      */
     public static void sendMessage(Player player, String message, Boolean tag) {
         if(tag) {
             player.sendMessage(chatTag + message);
-        }
-        else{
+        } else {
             player.sendMessage(message);
         }
     }
-
+    
+    /**
+     * Sends a general grey message to the player.
+     *
+     * @param player  Player to send message to
+     * @param message The message to send
+     * @param tag When true the plugin tag, "[FleaMarket]" is appended to the beginning of the message.
+     */
+    public static void sendMessage(Player player, TextComponent message, Boolean tag) {
+        if(tag) {
+            message.setText(chatTag + message.getText());
+        }
+        player.spigot().sendMessage(message);
+    }
     /**
      * Sends a green message to the player.
      *

@@ -11,4 +11,4 @@ commands:
     usage: "Usage: /sell <quantity> <unit price>"
   market:
     description: Use this to get the market list
-    usage: /marketlist <item name>
+    usage: /market <list:balance:help> <search term>

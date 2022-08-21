@@ -7,7 +7,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
+
 
 public class MarketCommand implements CommandExecutor {
 
@@ -19,58 +25,39 @@ public class MarketCommand implements CommandExecutor {
         this.market = market;
     }
 
-
-
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
+            if(args.length == 0)
+                return false;
+                
             Player player = (Player) commandSender;
-            if(strings[0].toLowerCase().equals("list")) {
-                if (strings.length > 1) {
-                    String searchType = ""; //searchType is called such because it will be used to search the market
-                    for (int i = 0; i < strings.length; i++) { //Item types are formatted in uppercase with upperscores
-                        if (i != 0)                          //This loop formats the player input thusly
-                            searchType += "_";
-                        searchType += strings[i];
+            if(args[0].toLowerCase().equals("list")) {
+                String searchTerm = "";
+                if(args.length > 1) {
+                    for (int i = 1; i<args.length; i++) {
+                        searchTerm += args[i].toLowerCase() + " ";
                     }
-                    searchType = searchType.toLowerCase();
-                    boolean searchSuccess = false;
+                    searchTerm = searchTerm.strip();
+                    sendMessage(player, "Search Result: ",true);
+                } else {
                     sendMessage(player, "Current Market Listings: ",true);
-                    for (Offer offer : market.offers()) {
-                        //   sendMessage(player, "\t" + offer.getItem().getType().toString());
-                        //   sendMessage(player, "\t" + searchType);
-                        if (searchType.equals(offer.getItem().getType().toString().toLowerCase())) {
-                            searchSuccess = true;
-                            if (!offer.getMerchant().equals(player))
-                                sendMessage(player, offer.print(), false);
-                            else
-                                sendMessage(player, offer.print() + "(Self)", false); //Useful for not buying your own items
-                        }
-                    }
-                    if (searchSuccess = false) {
-                        sendMessage(player, "No items found for" + searchType,true);
-                    }
-                } else{
-                    //No arguments
-                    sendMessage(player, "Current Market Listings: ",true);
-                    for(Offer offer: market.offers()) {
-                        String itemType = "";
-                        itemType = offer.getItem().getType().toString().replaceAll("_", " ");
-                        if(!offer.getMerchant().equals(player))
-                            sendMessage(player, offer.print(), false);
-                        else
-                            sendMessage(player, offer.print()+"(Self)", false); //Useful for not buying your own items
-                    }
-                    return true;
                 }
-            } else if(strings[0].toLowerCase().equals("balance")) {
+                for(Offer offer : market.offers(searchTerm)) {
+                    sendMessage(player, offer.format(), false);
+                }
+                return true;
+            } else if(args[0].toLowerCase().equals("balance")) {
                 Integer balance = market.getBank().get(player.getUniqueId());
                 sendMessage(player,"Current Balance: $" + ChatColor.DARK_GREEN + balance, true);
                 return true;
-            } else if(strings[0].toLowerCase().equals("help")){
-                sendMessage(player,"your just being dumb", true);
+            } else if(args[0].toLowerCase().equals("help")){
+                TextComponent component = new TextComponent(ChatColor.AQUA + "Click here for help!");
+                component.setColor(net.md_5.bungee.api.ChatColor.AQUA);
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/tiecia/MinecraftFleaMarket/blob/master-release/README.md#usage"));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Help Page").create()));
+                sendMessage(player, component, true);
                 return true;
             }
-
             return false;
         }
         else {
