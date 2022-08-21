@@ -333,6 +333,22 @@ public class MarketManager {
     }
 
     /**
+     * Gets all offers with the given search term in it's display name.
+     *
+     * @param searchTerm the string segment to search for.
+     * @return a min queue where the offer with the lowest unit price is the head.
+     */
+    public PriorityQueue<Offer> offers(String searchTerm) {
+        PriorityQueue<Offer> returnQueue = new PriorityQueue<Offer>();
+        for (Offer offer : offers()) {
+            if(offer.getDisplayName().contains(searchTerm.toLowerCase())) {
+                returnQueue.add(offer);
+            }
+        }
+        return returnQueue;
+    }
+
+    /**
      * Gets all offers that are selling the given material.
      *
      * @param material the material to search for.
