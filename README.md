@@ -1,3 +1,4 @@
+![Java CI with Maven](https://github.com/tiecia/MinecraftFleaMarket/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master-release)
 # MinecraftFleaMarket
 This is a Spigot plugin that provides a basic peer-to-peer store system for minecraft servers.
 <br/><br/>
