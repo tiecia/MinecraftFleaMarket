@@ -1,0 +1,61 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build and Deploy",
+      "type": "shell",
+      "command": "bash /workspaces/MinecraftFleaMarket/scripts/build_and_deploy.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Tail Server Log",
+      "type": "shell",
+      "command": "bash /workspaces/MinecraftFleaMarket/scripts/server_log_tail.sh",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Open Server Log",
+      "type": "shell",
+      "command": "bash /workspaces/MinecraftFleaMarket/scripts/server_log_open.sh",
+      "group": "none",
+      "presentation": {
+        "reveal": "never",
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Restart Spigot Server",
+      "type": "shell",
+      "command": "bash /workspaces/MinecraftFleaMarket/scripts/server_restart.sh",
+      "group": "none",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Restart Spigot Server then Tail Log",
+      "type": "shell",
+      "command": "bash /workspaces/MinecraftFleaMarket/scripts/server_restart_tail.sh",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

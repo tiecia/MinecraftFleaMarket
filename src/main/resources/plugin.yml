@@ -1,3 +1,14 @@
 name: MinecraftFleaMarket
 version: 0.1.0
-main: io.github.tiecia.MinecraftFleaMarket.MinecraftFleaMarket
+api-version: 1.15
+main: io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket
+commands:
+  buy:
+    description: Use this to buy stuff
+    usage: "Usage: /buy <quantity> <offer id>"
+  sell:
+    description: Use this to sell stuff
+    usage: "Usage: /sell <quantity> <unit price>"
+  market:
+    description: Use this to get the market list
+    usage: /market <list:balance:help> <search term>
