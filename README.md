@@ -68,9 +68,16 @@ Buy 20 of item 4.
 ![alt text](https://github.com/tiecia/MinecraftFleaMarket/blob/master-release/images/balance.png?raw=true)
 <br/><br/>
 # Contributing
-Contributions to this project are welcome! If you would like to contribute: 
- 1. Fork this repo
+Contributions to this project are welcome! I have created a custom vscode devcontaier to make developing this plugin extremely easy.
+
+The included devcontainer sets up the maven build environment, starts a minecraft server on port `25565`, and includes custom tasks for automatically building and deploying the plugin to the server.
+
+If you would like to contribute: 
+ 1. Fork this repo and open it in vscode
+ 1. Setup docker on your machine and install https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
+ 1. Open `MinecraftFleaMarket.code-workspace` and reopen the project in the container (from command palette)
  1. Make your changes
+ 1. Use `CTRL-SHIFT-B` to build and automatically reload plugin in the server
  1. Create a pull request with your changes
 
 If you find an bug, issue, or have a question, please create an issue detailing your experience/question.

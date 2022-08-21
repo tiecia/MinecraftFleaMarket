@@ -27,5 +27,6 @@ else
     wget https://github.com/tiecia/PlugManX-releases/releases/download/v2.3.0/PlugManX-2.3.0.jar
 fi
 echo "Development plugins installed!"
+chmod 777 /minecraft/plugins
 echo "Initializing server...this will take a while."
 /my_init
