@@ -1,9 +1,9 @@
 package io.github.tiecia.minecraftfleamarket;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -27,6 +27,7 @@ public class Offer implements Comparable<Offer> {
         this.unitPrice = inputUnitPrice;
         this.item = inputItem;
         this.displayName = item.getType().name().toLowerCase().replace("_"," ");
+        displayName = WordUtils.capitalizeFully(displayName);
         this.merchantName = Bukkit.getOfflinePlayer(inputMerchant).getName();
     }
 

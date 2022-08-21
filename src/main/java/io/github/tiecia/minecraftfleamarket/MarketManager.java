@@ -192,10 +192,6 @@ public class MarketManager {
             //Make sure quantity user inputted in not too big.
             sendFailureMessage(player, "Not enough items in offer");
             return false;
-        } else if (player.getUniqueId().equals(offerToBuy.getMerchant())) { //Comment statement for self testing
-           //Make sure user cannot buy from him/herself.
-            sendFailureMessage(player, "Cannot buy from yourself");
-            return false;
         }
 
         int totalCost = offerToBuy.getUnitPrice()*quantity;
@@ -341,7 +337,7 @@ public class MarketManager {
     public PriorityQueue<Offer> offers(String searchTerm) {
         PriorityQueue<Offer> returnQueue = new PriorityQueue<Offer>();
         for (Offer offer : offers()) {
-            if(offer.getDisplayName().contains(searchTerm.toLowerCase())) {
+            if(offer.getDisplayName().toLowerCase().contains(searchTerm.toLowerCase())) {
                 returnQueue.add(offer);
             }
         }

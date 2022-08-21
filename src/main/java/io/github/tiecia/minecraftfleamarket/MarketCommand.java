@@ -7,8 +7,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.sendMessage;
-import static io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket.log;
+
 
 public class MarketCommand implements CommandExecutor {
 
@@ -19,8 +24,6 @@ public class MarketCommand implements CommandExecutor {
         assert market != null;
         this.market = market;
     }
-
-
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
@@ -48,7 +51,11 @@ public class MarketCommand implements CommandExecutor {
                 sendMessage(player,"Current Balance: $" + ChatColor.DARK_GREEN + balance, true);
                 return true;
             } else if(args[0].toLowerCase().equals("help")){
-                sendMessage(player,"your just being dumb", true);
+                TextComponent component = new TextComponent(ChatColor.AQUA + "Click here for help!");
+                component.setColor(net.md_5.bungee.api.ChatColor.AQUA);
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/tiecia/MinecraftFleaMarket/blob/master-release/README.md#usage"));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Help Page").create()));
+                sendMessage(player, component, true);
                 return true;
             }
             return false;
