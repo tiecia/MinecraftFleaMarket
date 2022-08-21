@@ -83,9 +83,9 @@ public class Offer implements Comparable<Offer> {
     }
 
     public String format() {
-        return ChatColor.BLACK + "["+ ChatColor.LIGHT_PURPLE + id + ChatColor.BLACK + "]: " + ChatColor.AQUA + this.merchantName + ChatColor.GRAY + " is selling " + ChatColor.YELLOW + item.getAmount() + ChatColor.RED + " "+ displayName + ChatColor.GRAY + " for $" + ChatColor.DARK_GREEN + unitPrice + ChatColor.GRAY + " each";
+        return ChatColor.GRAY + "["+ ChatColor.WHITE + id + ChatColor.GRAY + "]: " + ChatColor.AQUA + this.merchantName + ChatColor.GRAY + " is selling " + ChatColor.YELLOW + item.getAmount() + ChatColor.GREEN + " "+ displayName + ChatColor.GRAY + " for $" + ChatColor.DARK_GREEN + unitPrice + ChatColor.GRAY + " each";
     }
-    
+
     //compareTo for offer objects compares the price values
     public int compareTo(Offer o) {
         if (o != null) {
