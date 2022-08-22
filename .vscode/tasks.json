@@ -56,6 +56,16 @@
         "panel": "dedicated"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Open Supervisor Logs",
+      "type": "shell",
+      "command": "bash /workspaces/MinecraftFleaMarket/scripts/supervisor_log.sh",
+      "group": "none",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
     }
   ]
 }

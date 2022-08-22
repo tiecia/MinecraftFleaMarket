@@ -1,14 +1,24 @@
 name: MinecraftFleaMarket
-version: 0.1.0
-api-version: 1.15
+version: 1.0.0
 main: io.github.tiecia.minecraftfleamarket.MinecraftFleaMarket
 commands:
   buy:
     description: Use this to buy stuff
     usage: "Usage: /buy <quantity> <offer id>"
+    permission: fleamarket.user
+    permission-message: You do not have permission!
   sell:
     description: Use this to sell stuff
     usage: "Usage: /sell <quantity> <unit price>"
+    permission: fleamarket.user
+    permission-message: You do not have permission!
   market:
     description: Use this to get the market list
     usage: /market <list:balance:help> <search term>
+    permission: fleamarket.user
+    permission-message: You do not have permission!
+
+permissions:
+  fleamarket.user:
+    description: Default user
+    default: not op

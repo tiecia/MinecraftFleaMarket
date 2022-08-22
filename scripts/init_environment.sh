@@ -27,6 +27,13 @@ else
     wget https://github.com/tiecia/PlugManX-releases/releases/download/v2.3.0/PlugManX-2.3.0.jar
 fi
 echo "Development plugins installed!"
-chmod 777 /minecraft/plugins
+chmod -R 777 /minecraft
+
+cd /
+apt-get update && apt-get install -y wget && \
+    wget https://dlcdn.apache.org/maven/maven-3/${MAVEN_VER}/binaries/apache-maven-${MAVEN_VER}-bin.tar.gz && \
+    tar -xvzf apache-maven-${MAVEN_VER}-bin.tar.gz && \
+    rm apache-maven-${MAVEN_VER}-bin.tar.gz
 echo "Initializing server...this will take a while."
+
 /my_init
