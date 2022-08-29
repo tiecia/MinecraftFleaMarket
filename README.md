@@ -2,9 +2,7 @@
 # MinecraftFleaMarket
 This is a Spigot plugin that provides a basic peer-to-peer store system for minecraft servers.
 <br/><br/>
-Tested Minecraft Versions: 1.15.2
-
-Note: This plugin will probably work with most Spigot server versions. If it works on a version not listed above please make a pull request adding the version to this list.
+Tested Spigot Versions: 1.15, 1.15.2, 1.16.3, 1.17, 1.18, 1.19
 <br/><br/>
 
 # Usage
